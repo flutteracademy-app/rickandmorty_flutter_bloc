@@ -29,6 +29,8 @@ environment:
 dependencies:
   cupertino_icons: ^1.0.2
   flutter_bloc: ^8.0.1
+  # https://pub.dev/packages/http/install
+  http: ^0.13.4
   flutter:
     sdk: flutter
 
