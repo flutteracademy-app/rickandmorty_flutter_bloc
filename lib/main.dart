@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rickandmorty_flutter_bloc/blocs/characters/characters_bloc.dart';
+import 'package:rickandmorty_flutter_bloc/data/repositories/character_repository.dart';
+import 'package:rickandmorty_flutter_bloc/data/services/rickandmorty_api_services.dart';
 import 'package:rickandmorty_flutter_bloc/pages/home_page.dart';
 
 void main() => runApp(const MyApp());
@@ -8,9 +12,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Material App',
-      home: HomePage(),
+    return RepositoryProvider(
+      create: ((context) => CharacterRepository(
+            rickandmortyApiServices: RickandmortyApiServices(),
+          )),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<CharactersBloc>(
+            create: (context) => CharactersBloc(
+              characterRepository: context.read<CharacterRepository>(),
+            ),
+          )
+        ],
+        child: const MaterialApp(
+          title: 'Material App',
+          home: HomePage(),
+        ),
+      ),
     );
   }
 }

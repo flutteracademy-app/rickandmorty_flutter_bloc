@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rickandmorty_flutter_bloc/pages/character_page.dart';
 import 'package:rickandmorty_flutter_bloc/theme/app_fonts.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/buttons/button_widget.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/layout/background_image.dart';
@@ -42,7 +43,16 @@ class HomePage extends StatelessWidget {
                 //NAVIGATION BUTTON
                 ButtonWidget(
                   text: "Continuar",
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return const CharacterPage();
+                        },
+                      ),
+                    );
+                  },
                 )
               ],
             ),
