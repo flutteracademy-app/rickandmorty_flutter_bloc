@@ -5,7 +5,7 @@ import 'package:rickandmorty_flutter_bloc/api.dart';
 import 'package:rickandmorty_flutter_bloc/data/models/character_model.dart';
 import 'package:rickandmorty_flutter_bloc/data/services/http_error_handler.dart';
 
-class RickandmortyApiServices {
+class CharactersApiServices {
   // final http.Client httpClient;
 
   // RickandmortyApiServices({required this.httpClient});
