@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rickandmorty_flutter_bloc/blocs/episodes/episodes_bloc.dart';
 import 'package:rickandmorty_flutter_bloc/data/models/character_model.dart';
 import 'package:rickandmorty_flutter_bloc/theme/app_colors.dart';
 import 'package:rickandmorty_flutter_bloc/theme/app_fonts.dart';
+import 'package:rickandmorty_flutter_bloc/widgets/actions/load_episodes_widget.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/buttons/button_widget.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/cards/card_information_character.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/layout/background_image.dart';
@@ -77,12 +80,24 @@ class CharacterDetailsPage extends StatelessWidget {
                       "Episodios",
                       style: TEXT_THEME_BLACK.headline2,
                     ),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(top: 20.0),
-                    //   child: LoadEpisodesWidget(
-                    //     character: character,
-                    //   ),
-                    // ),
+                    BlocBuilder<EpisodesBloc, EpisodesState>(
+                        builder: (context, state) {
+                      if (state.status == EpisodesStatus.loading) {
+                        return const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20.0),
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      }
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 20.0),
+                        child: LoadEpisodesWidget(
+                          episodes: state.episodes,
+                        ),
+                      );
+                    }),
+
                     //INTERESANT CHARACTERS SECTION
                     Text(
                       "Personajes interesantes",

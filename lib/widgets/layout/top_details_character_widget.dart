@@ -26,22 +26,20 @@ class TopDetailsCharacterWidget extends StatelessWidget {
             fit: BoxFit.fill,
           ),
         ),
-        // Positioned(
-        //   top: 60,
-        //   left: 20,
-        //   child: IconButton(
-        //     onPressed: () {
-        //       Get.offAllNamed(
-        //         Routes.CHARACTER,
-        //       );
-        //     },
-        //     icon: const Icon(
-        //       Icons.arrow_back,
-        //       size: 30,
-        //     ),
-        //     color: AppColors.COLOR_WHITE,
-        //   ),
-        // ),
+        Positioned(
+          top: 60,
+          left: 20,
+          child: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: const Icon(
+              Icons.arrow_back,
+              size: 30,
+            ),
+            color: AppColors.COLOR_WHITE,
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.only(top: 100.0),
           child: SizedBox(

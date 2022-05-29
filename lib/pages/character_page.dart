@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:rickandmorty_flutter_bloc/blocs/characters/characters_bloc.dart';
+import 'package:rickandmorty_flutter_bloc/blocs/episodes/episodes_bloc.dart';
 import 'package:rickandmorty_flutter_bloc/cubits/characters_page/characters_page_cubit.dart';
 import 'package:rickandmorty_flutter_bloc/pages/character_details_page.dart';
 import 'package:rickandmorty_flutter_bloc/theme/app_colors.dart';
@@ -72,6 +73,11 @@ class CharacterPage extends StatelessWidget {
                                 return CardCharacter(
                                   character: state.characters[index],
                                   onTap: () {
+                                    context
+                                        .read<EpisodesBloc>()
+                                        .add(FetchEpisodesEvent(
+                                          character: state.characters[index],
+                                        ));
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(

@@ -27,7 +27,6 @@ class CharactersApiServices {
       List<Character> resultCharacters = responseBody['results']
           .map<Character>((e) => Character.fromJson(e))
           .toList();
-      print(resultCharacters);
       return resultCharacters;
     } catch (e) {
       rethrow;

@@ -16,8 +16,6 @@ class CharacterRepository {
       final List<Character> characters =
           await rickandmortyApiServices.getCharactersPerPage(page);
       allCharacters.addAll(characters);
-      print(allCharacters);
-
       return allCharacters;
     } on CharacterException catch (e) {
       throw CustomError(errMsg: e.message);
