@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rickandmorty_flutter_bloc/cubits/episodes_number/episodes_number_cubit.dart';
 import 'package:rickandmorty_flutter_bloc/data/models/character_model.dart';
 import 'package:rickandmorty_flutter_bloc/theme/app_colors.dart';
 import 'package:rickandmorty_flutter_bloc/theme/app_fonts.dart';
@@ -31,6 +33,7 @@ class TopDetailsCharacterWidget extends StatelessWidget {
           left: 20,
           child: IconButton(
             onPressed: () {
+              BlocProvider.of<EpisodesNumberCubit>(context).clearNumbers();
               Navigator.of(context).pop();
             },
             icon: const Icon(
