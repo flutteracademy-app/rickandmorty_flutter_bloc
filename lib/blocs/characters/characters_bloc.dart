@@ -13,8 +13,11 @@ part 'characters_state.dart';
 
 class CharactersBloc extends Bloc<CharactersEvent, CharactersState> {
   final CharacterRepository characterRepository;
-  CharactersBloc({required this.characterRepository})
-      : super(CharactersState.initial()) {
+  final List<Character> allCharacters;
+  CharactersBloc({
+    required this.characterRepository,
+    required this.allCharacters,
+  }) : super(CharactersState.initial()) {
     on<FetchCharactersEvent>(_fetchCharacters);
   }
 
@@ -26,7 +29,10 @@ class CharactersBloc extends Bloc<CharactersEvent, CharactersState> {
 
     try {
       final List<Character> characters =
-          await characterRepository.fetchListCharacter(event.page);
+          await characterRepository.fetchListCharacter(
+        event.page,
+        allCharacters,
+      );
       emit(state.copyWith(
           status: CharactersStatus.loaded, characters: characters));
     } on CustomError catch (e) {

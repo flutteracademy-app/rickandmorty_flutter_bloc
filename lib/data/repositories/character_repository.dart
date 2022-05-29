@@ -10,11 +10,15 @@ class CharacterRepository {
     required this.rickandmortyApiServices,
   });
 
-  Future<List<Character>> fetchListCharacter(int page) async {
+  Future<List<Character>> fetchListCharacter(
+      int page, List<Character> allCharacters) async {
     try {
       final List<Character> characters =
           await rickandmortyApiServices.getCharactersPerPage(page);
-      return characters;
+      allCharacters.addAll(characters);
+      print(allCharacters);
+
+      return allCharacters;
     } on CharacterException catch (e) {
       throw CustomError(errMsg: e.message);
     } catch (e) {
