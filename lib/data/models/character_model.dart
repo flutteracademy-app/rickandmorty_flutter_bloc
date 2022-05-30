@@ -1,3 +1,9 @@
+enum Filter {
+  all,
+  active,
+  completed,
+}
+
 class Character {
   int? id;
   String? name;

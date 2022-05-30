@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rickandmorty_flutter_bloc/blocs/characters/characters_bloc.dart';
+import 'package:rickandmorty_flutter_bloc/blocs/characters_search/characters_search_bloc.dart';
 import 'package:rickandmorty_flutter_bloc/blocs/episodes/episodes_bloc.dart';
+import 'package:rickandmorty_flutter_bloc/blocs/filtered_characters/filtered_characters_bloc.dart';
 import 'package:rickandmorty_flutter_bloc/cubits/characters_page/characters_page_cubit.dart';
 import 'package:rickandmorty_flutter_bloc/cubits/episodes_number/episodes_number_cubit.dart';
 import 'package:rickandmorty_flutter_bloc/data/repositories/character_repository.dart';
@@ -49,6 +51,14 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider<EpisodesNumberCubit>(
             create: (context) => EpisodesNumberCubit(),
+          ),
+          BlocProvider<CharactersSearchBloc>(
+            create: (context) => CharactersSearchBloc(),
+          ),
+          BlocProvider<FilteredCharactersBloc>(
+            create: (context) => FilteredCharactersBloc(
+                initialCharacters:
+                    context.read<CharactersBloc>().state.characters),
           ),
         ],
         child: const MaterialApp(
