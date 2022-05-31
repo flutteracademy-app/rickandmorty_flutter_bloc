@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rickandmorty_flutter_bloc/blocs/character_filters/character_gender_filter/character_gender_filter_bloc.dart';
 import 'package:rickandmorty_flutter_bloc/blocs/character_filters/character_status_filter/character_status_filter_bloc.dart';
 import 'package:rickandmorty_flutter_bloc/blocs/characters/characters_bloc.dart';
 import 'package:rickandmorty_flutter_bloc/blocs/characters_search/characters_search_bloc.dart';
@@ -63,6 +64,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider<CharacterStatusFilterBloc>(
             create: (context) => CharacterStatusFilterBloc(),
+          ),
+          BlocProvider<CharacterGenderFilterBloc>(
+            create: (context) => CharacterGenderFilterBloc(),
           ),
         ],
         child: const MaterialApp(

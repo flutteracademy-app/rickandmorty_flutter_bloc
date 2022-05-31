@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
+import 'package:rickandmorty_flutter_bloc/blocs/character_filters/character_gender_filter/character_gender_filter_bloc.dart';
 import 'package:rickandmorty_flutter_bloc/blocs/character_filters/character_status_filter/character_status_filter_bloc.dart';
 import 'package:rickandmorty_flutter_bloc/blocs/characters/characters_bloc.dart';
 import 'package:rickandmorty_flutter_bloc/blocs/characters_search/characters_search_bloc.dart';
@@ -11,6 +12,7 @@ import 'package:rickandmorty_flutter_bloc/data/models/character_model.dart';
 import 'package:rickandmorty_flutter_bloc/pages/character_details_page.dart';
 import 'package:rickandmorty_flutter_bloc/theme/app_colors.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/buttons/button_search_widget.dart';
+import 'package:rickandmorty_flutter_bloc/widgets/buttons/filter_gender_button.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/buttons/filter_state_button.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/buttons/popupmenu_button_widget.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/cards/card_character.dart';
@@ -22,11 +24,11 @@ class CharacterPage extends StatelessWidget {
 
   List<Character> _filteredCharacters({
     required FilterStatus filterStatus,
+    required FilterGender filterGender,
     required String searchTerm,
     required List<Character> allCharacters,
   }) {
     List<Character> resultCharacters;
-
     switch (filterStatus) {
       case FilterStatus.alive:
         resultCharacters = allCharacters
@@ -44,6 +46,32 @@ class CharacterPage extends StatelessWidget {
         break;
       case FilterStatus.all:
         resultCharacters = allCharacters;
+        break;
+    }
+
+    switch (filterGender) {
+      case FilterGender.male:
+        resultCharacters = resultCharacters
+            .where((element) => element.gender == 'Male')
+            .toList();
+        break;
+      case FilterGender.female:
+        resultCharacters = resultCharacters
+            .where((element) => element.gender == 'Female')
+            .toList();
+        break;
+      case FilterGender.genderless:
+        resultCharacters = resultCharacters
+            .where((element) => element.gender == 'Genderless')
+            .toList();
+        break;
+      case FilterGender.unknown:
+        resultCharacters = resultCharacters
+            .where((element) => element.gender == 'unknown')
+            .toList();
+        break;
+      case FilterGender.all:
+        resultCharacters = resultCharacters;
         break;
     }
 
@@ -69,6 +97,10 @@ class CharacterPage extends StatelessWidget {
               BlocListener<CharactersSearchBloc, CharactersSearchState>(
                 listener: (context, stateCharactersSearch) {
                   final filteredCharacters = _filteredCharacters(
+                    filterGender: context
+                        .read<CharacterGenderFilterBloc>()
+                        .state
+                        .filterGender,
                     filterStatus: context
                         .read<CharacterStatusFilterBloc>()
                         .state
@@ -87,6 +119,30 @@ class CharacterPage extends StatelessWidget {
                 listener: (context, state) {
                   final filteredCharacters = _filteredCharacters(
                     filterStatus: state.filterStatus,
+                    filterGender: context
+                        .read<CharacterGenderFilterBloc>()
+                        .state
+                        .filterGender,
+                    allCharacters:
+                        context.read<CharactersBloc>().state.characters,
+                    searchTerm:
+                        context.read<CharactersSearchBloc>().state.searchTerm,
+                  );
+                  context.read<FilteredCharactersBloc>().add(
+                        CalculateFilteredCharactersEvent(
+                            filteredCharacters: filteredCharacters),
+                      );
+                },
+              ),
+              BlocListener<CharacterGenderFilterBloc,
+                  CharacterGenderFilterState>(
+                listener: (context, state) {
+                  final filteredCharacters = _filteredCharacters(
+                    filterGender: state.filterGender,
+                    filterStatus: context
+                        .read<CharacterStatusFilterBloc>()
+                        .state
+                        .filterStatus,
                     allCharacters:
                         context.read<CharactersBloc>().state.characters,
                     searchTerm:
@@ -107,6 +163,10 @@ class CharacterPage extends StatelessWidget {
                       errorDialog(context, state.error.errMsg);
                     }
                     final filteredCharacters = _filteredCharacters(
+                      filterGender: context
+                          .read<CharacterGenderFilterBloc>()
+                          .state
+                          .filterGender,
                       filterStatus: context
                           .read<CharacterStatusFilterBloc>()
                           .state
@@ -179,6 +239,42 @@ class CharacterPage extends StatelessWidget {
                                 ),
                                 const SizedBox(
                                   height: 10,
+                                ),
+                                SizedBox(
+                                  height: 37,
+                                  child: ListView(
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.horizontal,
+                                    children: const [
+                                      FilterGenderButton(
+                                        filterGender: FilterGender.all,
+                                      ),
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                      FilterGenderButton(
+                                        filterGender: FilterGender.male,
+                                      ),
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                      FilterGenderButton(
+                                        filterGender: FilterGender.female,
+                                      ),
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                      FilterGenderButton(
+                                        filterGender: FilterGender.genderless,
+                                      ),
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                      FilterGenderButton(
+                                        filterGender: FilterGender.unknown,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),

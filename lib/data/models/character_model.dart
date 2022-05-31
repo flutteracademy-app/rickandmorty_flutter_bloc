@@ -5,6 +5,14 @@ enum FilterStatus {
   unknown,
 }
 
+enum FilterGender {
+  all,
+  female,
+  male,
+  genderless,
+  unknown,
+}
+
 class Character {
   int? id;
   String? name;
