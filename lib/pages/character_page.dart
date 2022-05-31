@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
+import 'package:rickandmorty_flutter_bloc/blocs/character_filters/character_status_filter/character_status_filter_bloc.dart';
 import 'package:rickandmorty_flutter_bloc/blocs/characters/characters_bloc.dart';
 import 'package:rickandmorty_flutter_bloc/blocs/characters_search/characters_search_bloc.dart';
 import 'package:rickandmorty_flutter_bloc/blocs/episodes/episodes_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:rickandmorty_flutter_bloc/data/models/character_model.dart';
 import 'package:rickandmorty_flutter_bloc/pages/character_details_page.dart';
 import 'package:rickandmorty_flutter_bloc/theme/app_colors.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/buttons/button_search_widget.dart';
+import 'package:rickandmorty_flutter_bloc/widgets/buttons/filter_state_button.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/buttons/popupmenu_button_widget.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/cards/card_character.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/dialogs/error_dialog.dart';
@@ -19,12 +21,34 @@ class CharacterPage extends StatelessWidget {
   const CharacterPage({Key? key}) : super(key: key);
 
   List<Character> _filteredCharacters({
+    required FilterStatus filterStatus,
     required String searchTerm,
     required List<Character> allCharacters,
   }) {
-    List<Character> resultCharacters = allCharacters;
+    List<Character> resultCharacters;
+
+    switch (filterStatus) {
+      case FilterStatus.alive:
+        resultCharacters = allCharacters
+            .where((element) => element.status == 'Alive')
+            .toList();
+        break;
+      case FilterStatus.dead:
+        resultCharacters =
+            allCharacters.where((element) => element.status == 'Dead').toList();
+        break;
+      case FilterStatus.unknown:
+        resultCharacters = allCharacters
+            .where((element) => element.status == 'unknown')
+            .toList();
+        break;
+      case FilterStatus.all:
+        resultCharacters = allCharacters;
+        break;
+    }
+
     if (searchTerm.isNotEmpty) {
-      resultCharacters = allCharacters
+      resultCharacters = resultCharacters
           .where((element) => element.name!.toLowerCase().contains(searchTerm))
           .toList();
     }
@@ -40,16 +64,41 @@ class CharacterPage extends StatelessWidget {
         children: [
           const BackgroundImage(),
           //LOAD CARDS BY LAZYLOAD
-          BlocListener<CharactersSearchBloc, CharactersSearchState>(
-            listener: (context, stateCharactersSearch) {
-              final filteredCharacters = _filteredCharacters(
-                allCharacters: context.read<CharactersBloc>().state.characters,
-                searchTerm: stateCharactersSearch.searchTerm,
-              );
-              context.read<FilteredCharactersBloc>().add(
-                  CalculateFilteredCharactersEvent(
-                      filteredCharacters: filteredCharacters));
-            },
+          MultiBlocListener(
+            listeners: [
+              BlocListener<CharactersSearchBloc, CharactersSearchState>(
+                listener: (context, stateCharactersSearch) {
+                  final filteredCharacters = _filteredCharacters(
+                    filterStatus: context
+                        .read<CharacterStatusFilterBloc>()
+                        .state
+                        .filterStatus,
+                    allCharacters:
+                        context.read<CharactersBloc>().state.characters,
+                    searchTerm: stateCharactersSearch.searchTerm,
+                  );
+                  context.read<FilteredCharactersBloc>().add(
+                      CalculateFilteredCharactersEvent(
+                          filteredCharacters: filteredCharacters));
+                },
+              ),
+              BlocListener<CharacterStatusFilterBloc,
+                  CharacterStatusFilterState>(
+                listener: (context, state) {
+                  final filteredCharacters = _filteredCharacters(
+                    filterStatus: state.filterStatus,
+                    allCharacters:
+                        context.read<CharactersBloc>().state.characters,
+                    searchTerm:
+                        context.read<CharactersSearchBloc>().state.searchTerm,
+                  );
+                  context.read<FilteredCharactersBloc>().add(
+                        CalculateFilteredCharactersEvent(
+                            filteredCharacters: filteredCharacters),
+                      );
+                },
+              ),
+            ],
             child: BlocBuilder<CharactersPageCubit, CharactersPageState>(
               builder: (context, characterPageState) {
                 return BlocConsumer<CharactersBloc, CharactersState>(
@@ -58,6 +107,10 @@ class CharacterPage extends StatelessWidget {
                       errorDialog(context, state.error.errMsg);
                     }
                     final filteredCharacters = _filteredCharacters(
+                      filterStatus: context
+                          .read<CharacterStatusFilterBloc>()
+                          .state
+                          .filterStatus,
                       allCharacters: state.characters,
                       searchTerm:
                           context.read<CharactersSearchBloc>().state.searchTerm,
@@ -98,7 +151,39 @@ class CharacterPage extends StatelessWidget {
                                 PopupmenuButtonWidget()
                               ],
                             ),
+                          ), //FILTERS BY CATEGORIES
+                          Container(
+                            color: AppColors.COLOR_WHITE,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 15),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: const [
+                                    FilterStateButton(
+                                      filterStatus: FilterStatus.all,
+                                    ),
+                                    FilterStateButton(
+                                      filterStatus: FilterStatus.alive,
+                                    ),
+                                    FilterStateButton(
+                                      filterStatus: FilterStatus.dead,
+                                    ),
+                                    FilterStateButton(
+                                      filterStatus: FilterStatus.unknown,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                              ],
+                            ),
                           ),
+                          //SHOW CARDS
                           Container(
                             color: AppColors.COLOR_WHITE,
                             padding: const EdgeInsets.only(

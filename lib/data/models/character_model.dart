@@ -1,7 +1,8 @@
-enum Filter {
+enum FilterStatus {
   all,
-  active,
-  completed,
+  alive,
+  dead,
+  unknown,
 }
 
 class Character {
