@@ -8,6 +8,7 @@ import 'package:rickandmorty_flutter_bloc/blocs/episodes/episodes_bloc.dart';
 import 'package:rickandmorty_flutter_bloc/blocs/filtered_characters/filtered_characters_bloc.dart';
 import 'package:rickandmorty_flutter_bloc/cubits/characters_page/characters_page_cubit.dart';
 import 'package:rickandmorty_flutter_bloc/cubits/episodes_number/episodes_number_cubit.dart';
+import 'package:rickandmorty_flutter_bloc/cubits/show_favourites/show_favourites_cubit.dart';
 import 'package:rickandmorty_flutter_bloc/data/repositories/character_repository.dart';
 import 'package:rickandmorty_flutter_bloc/data/repositories/episode_repository.dart';
 import 'package:rickandmorty_flutter_bloc/data/services/characters_api_services.dart';
@@ -67,6 +68,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider<CharacterGenderFilterBloc>(
             create: (context) => CharacterGenderFilterBloc(),
+          ),
+          BlocProvider<ShowFavouritesCubit>(
+            create: (context) => ShowFavouritesCubit(),
           ),
         ],
         child: const MaterialApp(

@@ -8,6 +8,7 @@ import 'package:rickandmorty_flutter_bloc/blocs/characters_search/characters_sea
 import 'package:rickandmorty_flutter_bloc/blocs/episodes/episodes_bloc.dart';
 import 'package:rickandmorty_flutter_bloc/blocs/filtered_characters/filtered_characters_bloc.dart';
 import 'package:rickandmorty_flutter_bloc/cubits/characters_page/characters_page_cubit.dart';
+import 'package:rickandmorty_flutter_bloc/cubits/show_favourites/show_favourites_cubit.dart';
 import 'package:rickandmorty_flutter_bloc/data/models/character_model.dart';
 import 'package:rickandmorty_flutter_bloc/pages/character_details_page.dart';
 import 'package:rickandmorty_flutter_bloc/theme/app_colors.dart';
@@ -28,6 +29,7 @@ class CharacterPage extends StatelessWidget {
     required FilterGender filterGender,
     required String searchTerm,
     required List<Character> allCharacters,
+    required bool isSelected,
   }) {
     List<Character> resultCharacters;
     switch (filterStatus) {
@@ -81,6 +83,12 @@ class CharacterPage extends StatelessWidget {
           .where((element) => element.name!.toLowerCase().contains(searchTerm))
           .toList();
     }
+
+    if (isSelected == true) {
+      resultCharacters = resultCharacters
+          .where((element) => element.isFavourite == true)
+          .toList();
+    }
     return resultCharacters;
   }
 
@@ -109,6 +117,8 @@ class CharacterPage extends StatelessWidget {
                     allCharacters:
                         context.read<CharactersBloc>().state.characters,
                     searchTerm: stateCharactersSearch.searchTerm,
+                    isSelected:
+                        context.read<ShowFavouritesCubit>().state.isSelected,
                   );
                   context.read<FilteredCharactersBloc>().add(
                       CalculateFilteredCharactersEvent(
@@ -128,6 +138,31 @@ class CharacterPage extends StatelessWidget {
                         context.read<CharactersBloc>().state.characters,
                     searchTerm:
                         context.read<CharactersSearchBloc>().state.searchTerm,
+                    isSelected:
+                        context.read<ShowFavouritesCubit>().state.isSelected,
+                  );
+                  context.read<FilteredCharactersBloc>().add(
+                        CalculateFilteredCharactersEvent(
+                            filteredCharacters: filteredCharacters),
+                      );
+                },
+              ),
+              BlocListener<ShowFavouritesCubit, ShowFavouritesState>(
+                listener: (context, state) {
+                  final filteredCharacters = _filteredCharacters(
+                    filterGender: context
+                        .read<CharacterGenderFilterBloc>()
+                        .state
+                        .filterGender,
+                    filterStatus: context
+                        .read<CharacterStatusFilterBloc>()
+                        .state
+                        .filterStatus,
+                    allCharacters:
+                        context.read<CharactersBloc>().state.characters,
+                    searchTerm:
+                        context.read<CharactersSearchBloc>().state.searchTerm,
+                    isSelected: state.isSelected,
                   );
                   context.read<FilteredCharactersBloc>().add(
                         CalculateFilteredCharactersEvent(
@@ -148,6 +183,8 @@ class CharacterPage extends StatelessWidget {
                         context.read<CharactersBloc>().state.characters,
                     searchTerm:
                         context.read<CharactersSearchBloc>().state.searchTerm,
+                    isSelected:
+                        context.read<ShowFavouritesCubit>().state.isSelected,
                   );
                   context.read<FilteredCharactersBloc>().add(
                         CalculateFilteredCharactersEvent(
@@ -175,6 +212,8 @@ class CharacterPage extends StatelessWidget {
                       allCharacters: state.characters,
                       searchTerm:
                           context.read<CharactersSearchBloc>().state.searchTerm,
+                      isSelected:
+                          context.read<ShowFavouritesCubit>().state.isSelected,
                     );
                     context.read<FilteredCharactersBloc>().add(
                         CalculateFilteredCharactersEvent(
