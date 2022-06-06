@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:rickandmorty_flutter_bloc/blocs/characters/characters_bloc.dart';
 import 'package:rickandmorty_flutter_bloc/data/models/character_model.dart';
 import 'package:rickandmorty_flutter_bloc/theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FavouriteButtonWidget extends StatelessWidget {
   final Character character;
@@ -14,10 +17,16 @@ class FavouriteButtonWidget extends StatelessWidget {
     return BlocBuilder<CharactersBloc, CharactersState>(
         builder: (context, state) {
       return GestureDetector(
-        onTap: () {
+        onTap: () async {
           context.read<CharactersBloc>().add(ToggleCharacterEvent(
                 id: character.id!,
               ));
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+
+          print(state.characters);
+
+          await prefs.setString(
+              "favouritesCharacters", jsonEncode(state.characters));
         },
         child: Container(
           decoration: const BoxDecoration(
