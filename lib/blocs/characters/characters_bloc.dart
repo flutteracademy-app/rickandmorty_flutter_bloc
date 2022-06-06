@@ -1,10 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 
 import 'package:rickandmorty_flutter_bloc/data/models/character_model.dart';
 import 'package:rickandmorty_flutter_bloc/data/models/custom_error.dart';
@@ -66,7 +63,6 @@ class CharactersBloc extends Bloc<CharactersEvent, CharactersState> {
       if (character.id == event.id) {
         character.isFavourite ??= false;
         character.isFavourite = !character.isFavourite;
-        print(character.isFavourite);
         return character;
       }
       return character;

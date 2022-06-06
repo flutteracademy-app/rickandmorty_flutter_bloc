@@ -15,7 +15,6 @@ class LoadInteresantCharactersWidget extends StatelessWidget {
     required List<Character> allCharacters,
   }) {
     List<Character> resultCharacters = allCharacters.getRange(0, 3).toList();
-    print(resultCharacters);
     return resultCharacters;
   }
 

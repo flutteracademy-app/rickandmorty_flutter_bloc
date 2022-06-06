@@ -13,7 +13,7 @@ class ButtonSearchWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(5),
       ),
       child: Row(
-        children: [
+        children: const [
           TextSearchField(),
         ],
       ),

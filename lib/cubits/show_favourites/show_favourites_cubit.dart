@@ -9,4 +9,9 @@ class ShowFavouritesCubit extends Cubit<ShowFavouritesState> {
     final newState = state.copyWith(isSelected: !state.isSelected);
     emit(newState);
   }
+
+  void clearSelection() {
+    final newState = state.copyWith(isSelected: false);
+    emit(newState);
+  }
 }

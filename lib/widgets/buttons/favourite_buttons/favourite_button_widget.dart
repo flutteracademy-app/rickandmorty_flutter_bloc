@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:rickandmorty_flutter_bloc/blocs/characters/characters_bloc.dart';
 import 'package:rickandmorty_flutter_bloc/data/models/character_model.dart';
@@ -22,9 +21,6 @@ class FavouriteButtonWidget extends StatelessWidget {
                 id: character.id!,
               ));
           SharedPreferences prefs = await SharedPreferences.getInstance();
-
-          print(state.characters);
-
           await prefs.setString(
               "favouritesCharacters", jsonEncode(state.characters));
         },
