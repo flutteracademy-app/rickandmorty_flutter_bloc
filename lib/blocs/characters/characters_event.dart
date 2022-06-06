@@ -10,3 +10,10 @@ class FetchCharactersEvent extends CharactersEvent {
     required this.page,
   });
 }
+
+class ToggleCharacterEvent extends CharactersEvent {
+  final int id;
+  ToggleCharacterEvent({
+    required this.id,
+  });
+}

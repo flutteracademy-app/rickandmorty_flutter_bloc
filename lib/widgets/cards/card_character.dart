@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rickandmorty_flutter_bloc/data/models/character_model.dart';
+import 'package:rickandmorty_flutter_bloc/widgets/buttons/favourite_buttons/favourite_button_widget.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/texts/text_character_card.dart';
 
 class CardCharacter extends StatelessWidget {
@@ -34,13 +35,13 @@ class CardCharacter extends StatelessWidget {
                     height: 154,
                     fit: BoxFit.fill,
                   ),
-                  // Positioned(
-                  //   bottom: 10,
-                  //   right: 10,
-                  //   child: FavouriteButtonWidget(
-                  //     character: character,
-                  //   ),
-                  // )
+                  Positioned(
+                    bottom: 10,
+                    right: 10,
+                    child: FavouriteButtonWidget(
+                      character: character,
+                    ),
+                  )
                 ],
               ),
             ),

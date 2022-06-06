@@ -19,6 +19,7 @@ class CharactersBloc extends Bloc<CharactersEvent, CharactersState> {
     required this.allCharacters,
   }) : super(CharactersState.initial()) {
     on<FetchCharactersEvent>(_fetchCharacters);
+    on<ToggleCharacterEvent>(_toggleCharacters);
   }
 
   FutureOr<void> _fetchCharacters(
@@ -38,5 +39,21 @@ class CharactersBloc extends Bloc<CharactersEvent, CharactersState> {
     } on CustomError catch (e) {
       emit(state.copyWith(status: CharactersStatus.error, error: e));
     }
+  }
+
+  void _toggleCharacters(
+    ToggleCharacterEvent event,
+    Emitter<CharactersState> emit,
+  ) {
+    final newCharacters = state.characters.map((Character character) {
+      if (character.id == event.id) {
+        character.isFavourite ??= false;
+        character.isFavourite = !character.isFavourite;
+        print(character.isFavourite);
+        return character;
+      }
+      return character;
+    }).toList();
+    emit(state.copyWith(characters: newCharacters));
   }
 }

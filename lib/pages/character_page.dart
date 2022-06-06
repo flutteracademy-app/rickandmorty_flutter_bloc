@@ -11,6 +11,7 @@ import 'package:rickandmorty_flutter_bloc/cubits/characters_page/characters_page
 import 'package:rickandmorty_flutter_bloc/data/models/character_model.dart';
 import 'package:rickandmorty_flutter_bloc/pages/character_details_page.dart';
 import 'package:rickandmorty_flutter_bloc/theme/app_colors.dart';
+import 'package:rickandmorty_flutter_bloc/widgets/actions/show_favorites_widget.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/buttons/button_search_widget.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/buttons/filter_gender_button.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/buttons/filter_state_button.dart';
@@ -208,10 +209,11 @@ class CharacterPage extends StatelessWidget {
                                 //FILTERS SECTION
                                 ButtonSearchWidget(),
                                 Spacer(),
-                                PopupmenuButtonWidget()
+                                PopupmenuButtonWidget(),
                               ],
                             ),
-                          ), //FILTERS BY CATEGORIES
+                          ),
+                          //FILTERS BY CATEGORIES
                           Container(
                             color: AppColors.COLOR_WHITE,
                             padding: const EdgeInsets.symmetric(
@@ -279,6 +281,7 @@ class CharacterPage extends StatelessWidget {
                               ],
                             ),
                           ),
+                          const ShowFavouritesWidget(),
                           //SHOW CARDS
                           Container(
                             color: AppColors.COLOR_WHITE,
