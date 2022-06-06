@@ -4,6 +4,7 @@ import 'package:rickandmorty_flutter_bloc/cubits/episodes_number/episodes_number
 import 'package:rickandmorty_flutter_bloc/data/models/character_model.dart';
 import 'package:rickandmorty_flutter_bloc/theme/app_colors.dart';
 import 'package:rickandmorty_flutter_bloc/theme/app_fonts.dart';
+import 'package:rickandmorty_flutter_bloc/widgets/buttons/favourite_buttons/favourite_button_widget.dart';
 
 class TopDetailsCharacterWidget extends StatelessWidget {
   final Character character;
@@ -64,13 +65,13 @@ class TopDetailsCharacterWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    // Positioned(
-                    //   bottom: 0,
-                    //   left: 52,
-                    //   child: FavouriteButtonWidget(
-                    //     character: character,
-                    //   ),
-                    // ),
+                    Positioned(
+                      bottom: 0,
+                      left: 52,
+                      child: FavouriteButtonWidget(
+                        character: character,
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(

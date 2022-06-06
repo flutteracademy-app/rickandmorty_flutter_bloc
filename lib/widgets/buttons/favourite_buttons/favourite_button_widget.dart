@@ -11,27 +11,30 @@ class FavouriteButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        context.read<CharactersBloc>().add(ToggleCharacterEvent(
-              id: character.id!,
-            ));
-      },
-      child: Container(
-        decoration: const BoxDecoration(
-          color: AppColors.COLOR_LIGHT_GREY,
-          shape: BoxShape.circle,
+    return BlocBuilder<CharactersBloc, CharactersState>(
+        builder: (context, state) {
+      return GestureDetector(
+        onTap: () {
+          context.read<CharactersBloc>().add(ToggleCharacterEvent(
+                id: character.id!,
+              ));
+        },
+        child: Container(
+          decoration: const BoxDecoration(
+            color: AppColors.COLOR_LIGHT_GREY,
+            shape: BoxShape.circle,
+          ),
+          height: 36,
+          width: 36,
+          child: Icon(
+            Icons.star,
+            size: 20,
+            color: (character.isFavourite == true)
+                ? AppColors.COLOR_YELLOW
+                : AppColors.COLOR_WHITE,
+          ),
         ),
-        height: 36,
-        width: 36,
-        child: Icon(
-          Icons.star,
-          size: 20,
-          color: (character.isFavourite == true)
-              ? AppColors.COLOR_YELLOW
-              : AppColors.COLOR_WHITE,
-        ),
-      ),
-    );
+      );
+    });
   }
 }

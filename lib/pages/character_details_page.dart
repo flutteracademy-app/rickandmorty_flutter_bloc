@@ -5,6 +5,7 @@ import 'package:rickandmorty_flutter_bloc/data/models/character_model.dart';
 import 'package:rickandmorty_flutter_bloc/theme/app_colors.dart';
 import 'package:rickandmorty_flutter_bloc/theme/app_fonts.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/actions/load_episodes_widget.dart';
+import 'package:rickandmorty_flutter_bloc/widgets/actions/load_interesant_characters_widget.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/buttons/button_widget.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/cards/card_information_character.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/layout/background_image.dart';
@@ -103,10 +104,10 @@ class CharacterDetailsPage extends StatelessWidget {
                       "Personajes interesantes",
                       style: TEXT_THEME_BLACK.headline2,
                     ),
-                    // const Padding(
-                    //   padding: EdgeInsets.only(top: 20.0),
-                    //   child: LoadInteresantCharacter(),
-                    // ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 20.0),
+                      child: LoadInteresantCharactersWidget(),
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(top: 30.0),
                       child: Center(
