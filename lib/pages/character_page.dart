@@ -12,6 +12,7 @@ import 'package:rickandmorty_flutter_bloc/cubits/show_favourites/show_favourites
 import 'package:rickandmorty_flutter_bloc/data/models/character_model.dart';
 import 'package:rickandmorty_flutter_bloc/pages/character_details_page.dart';
 import 'package:rickandmorty_flutter_bloc/theme/app_colors.dart';
+import 'package:rickandmorty_flutter_bloc/utils/characters_utils.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/actions/show_favorites_widget.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/buttons/button_search_widget.dart';
 import 'package:rickandmorty_flutter_bloc/widgets/buttons/filter_gender_button.dart';
@@ -24,76 +25,9 @@ import 'package:rickandmorty_flutter_bloc/widgets/layout/background_image.dart';
 class CharacterPage extends StatelessWidget {
   const CharacterPage({Key? key}) : super(key: key);
 
-  List<Character> _filteredCharacters({
-    required FilterStatus filterStatus,
-    required FilterGender filterGender,
-    required String searchTerm,
-    required List<Character> allCharacters,
-    required bool isSelected,
-  }) {
-    List<Character> resultCharacters;
-    switch (filterStatus) {
-      case FilterStatus.alive:
-        resultCharacters = allCharacters
-            .where((element) => element.status == 'Alive')
-            .toList();
-        break;
-      case FilterStatus.dead:
-        resultCharacters =
-            allCharacters.where((element) => element.status == 'Dead').toList();
-        break;
-      case FilterStatus.unknown:
-        resultCharacters = allCharacters
-            .where((element) => element.status == 'unknown')
-            .toList();
-        break;
-      case FilterStatus.all:
-        resultCharacters = allCharacters;
-        break;
-    }
-
-    switch (filterGender) {
-      case FilterGender.male:
-        resultCharacters = resultCharacters
-            .where((element) => element.gender == 'Male')
-            .toList();
-        break;
-      case FilterGender.female:
-        resultCharacters = resultCharacters
-            .where((element) => element.gender == 'Female')
-            .toList();
-        break;
-      case FilterGender.genderless:
-        resultCharacters = resultCharacters
-            .where((element) => element.gender == 'Genderless')
-            .toList();
-        break;
-      case FilterGender.unknown:
-        resultCharacters = resultCharacters
-            .where((element) => element.gender == 'unknown')
-            .toList();
-        break;
-      case FilterGender.all:
-        resultCharacters = resultCharacters;
-        break;
-    }
-
-    if (searchTerm.isNotEmpty) {
-      resultCharacters = resultCharacters
-          .where((element) => element.name!.toLowerCase().contains(searchTerm))
-          .toList();
-    }
-
-    if (isSelected == true) {
-      resultCharacters = resultCharacters
-          .where((element) => element.isFavourite == true)
-          .toList();
-    }
-    return resultCharacters;
-  }
-
   @override
   Widget build(BuildContext context) {
+    CharacterUtils characterUtils = CharacterUtils();
     final charactersFinal =
         context.watch<FilteredCharactersBloc>().state.filteredCharacters;
     return Scaffold(
@@ -105,7 +39,7 @@ class CharacterPage extends StatelessWidget {
             listeners: [
               BlocListener<CharactersSearchBloc, CharactersSearchState>(
                 listener: (context, stateCharactersSearch) {
-                  final filteredCharacters = _filteredCharacters(
+                  final filteredCharacters = characterUtils.filteredCharacters(
                     filterGender: context
                         .read<CharacterGenderFilterBloc>()
                         .state
@@ -128,7 +62,7 @@ class CharacterPage extends StatelessWidget {
               BlocListener<CharacterStatusFilterBloc,
                   CharacterStatusFilterState>(
                 listener: (context, state) {
-                  final filteredCharacters = _filteredCharacters(
+                  final filteredCharacters = characterUtils.filteredCharacters(
                     filterStatus: state.filterStatus,
                     filterGender: context
                         .read<CharacterGenderFilterBloc>()
@@ -149,7 +83,7 @@ class CharacterPage extends StatelessWidget {
               ),
               BlocListener<ShowFavouritesCubit, ShowFavouritesState>(
                 listener: (context, state) {
-                  final filteredCharacters = _filteredCharacters(
+                  final filteredCharacters = characterUtils.filteredCharacters(
                     filterGender: context
                         .read<CharacterGenderFilterBloc>()
                         .state
@@ -173,7 +107,7 @@ class CharacterPage extends StatelessWidget {
               BlocListener<CharacterGenderFilterBloc,
                   CharacterGenderFilterState>(
                 listener: (context, state) {
-                  final filteredCharacters = _filteredCharacters(
+                  final filteredCharacters = characterUtils.filteredCharacters(
                     filterGender: state.filterGender,
                     filterStatus: context
                         .read<CharacterStatusFilterBloc>()
@@ -200,7 +134,8 @@ class CharacterPage extends StatelessWidget {
                     if (state.status == CharactersStatus.error) {
                       errorDialog(context, state.error.errMsg);
                     }
-                    final filteredCharacters = _filteredCharacters(
+                    final filteredCharacters =
+                        characterUtils.filteredCharacters(
                       filterGender: context
                           .read<CharacterGenderFilterBloc>()
                           .state
